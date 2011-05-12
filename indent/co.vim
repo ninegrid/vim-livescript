@@ -1,6 +1,6 @@
-" Language:    CoffeeScript
-" Maintainer:  Mick Koch <kchmck@gmail.com>
-" URL:         http://github.com/kchmck/vim-coffee-script
+" Language:    Coco
+" Maintainer:  satyr
+" URL:         http://github.com/satyr/vim-coco
 " License:     WTFPL
 
 if exists("b:did_indent")
