@@ -10,8 +10,14 @@ endif
 let b:did_ftplugin = 1
 
 setlocal formatoptions-=t formatoptions+=croql
-setlocal comments=f-1:###,:#
+setlocal comments=:#
 setlocal commentstring=#\ %s
+
+setlocal makeprg=coco\ -c\ $*\ '%'
+setlocal errorformat=%EFailed\ at:\ %f,
+                    \%CSyntaxError:\ %m\ on\ line\ %l,
+                    \%CError:\ Parse\ error\ on\ line\ %l:\ %m,
+                    \%C,%C\ %.%#
 
 " Fold by indentation, but only if enabled.
 setlocal foldmethod=indent
@@ -20,11 +26,12 @@ if !exists("coco_folding")
   setlocal nofoldenable
 endif
 
-" Compile some CoffeeScript.
-command! -range=% CocoCompile <line1>,<line2>:w !coco -scb
-
-" Compile the current file on write.
-if exists("coco_compile_on_save")
-  autocmd BufWritePost,FileWritePost *.co silent !coco -c "<afile>" &
+if !exists("coco_make_options")
+  let coco_make_options = ""
 endif
+
+" Compile snippet.
+command! -range=% CocoCompile <line1>,<line2>:w !coco -scb
+" Compile the current file.
+command! -bang -bar -nargs=* CocoMake exec 'make<bang>' coco_make_options '<args>'
 
