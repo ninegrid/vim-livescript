@@ -48,7 +48,7 @@ syntax cluster coReserved contains=coStatement,coRepeat,coConditional,
 \                                  coException,coOperator,coKeyword,
 \                                  coBoolean
 
-" Matches @-variables like @abc.
+" Matches thisprops like @abc.
 syntax match coVar /@@\?\%(\I\i*\)\?/
 highlight default link coVar Type
 
@@ -63,36 +63,25 @@ highlight default link coConstant Constant
 
 " What can make up a variable name
 syntax cluster coIdentifier contains=coVar,coObject,coConstant,
-\                                        coPrototype
+\                                    coPrototype
 
 syntax region coString start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@coInterpString
 syntax region coString start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=@coSimpleString
 highlight default link coString String
 
-" Matches numbers like -10, -10e8, -10E8, 10, 10e8, 10E8.
-syntax match coNumber /\i\@<![-+]\?\d\+\%([eE][+-]\?\d\+\)\?/
+" Matches numbers like 10, 10e8, 10E8, 10, 10e8, 10E8.
+syntax match coNumber /\d\+\%([eE][+-]\?\d\+\)\?/
 " Matches hex numbers like 0xfff, 0x000.
 syntax match coNumber /\<0[xX]\x\+\>/
 highlight default link coNumber Number
 
-" Matches floating-point numbers like -10.42e8, 10.42e-8.
-syntax match coFloat /\i\@<![-+]\?\d*\.\@<!\.\d\+\%([eE][+-]\?\d\+\)\?/
+" Matches floating-point numbers like 10.42e-8.
+syntax match coFloat /\d*\.\@<!\.\d\+\%([eE][+-]\?\d\+\)\?/
 highlight default link coFloat Float
-
-syntax match coAssignSymbols /:\@<!::\@!\|++\|--\|\%(\%(\s\zs\%(and\|or\)\)\|&&\|||\|?\|+\|-\|\/\|\*\|%\|<<\|>>\|>>>\|&\||\|\^\)\?=\@<!==\@!>\@!/ contained
-highlight default link coAssignSymbols SpecialChar
-
-syntax match coAssignBrackets /\[.\+\]/ contained contains=TOP,coAssign
-
-syntax match coAssign /[}\]]\@<=\s*==\@!>\@!/ contains=coAssignSymbols
-syntax match coAssign /\%(++\|--\)\s*\%(@\|@\?\I\)\%(\i\|::\|\.\|?\|\[.\+\]\)*/
-\                         contains=@coIdentifier,coAssignSymbols,coAssignBrackets
-syntax match coAssign /\%(@\|@\?\I\)\%(\i\|::\|\.\|?\|\[.\+\]\)*\%(++\|--\|\s*\%(and\|or\|&&\|||\|?\|+\|-\|\/\|\*\|%\|<<\|>>\|>>>\|&\||\|\^\)\?=\@<!==\@!>\@!\)/
-\                         contains=@coIdentifier,coAssignSymbols,coAssignBrackets
 
 " Displays an error for reserved words.
 if !exists("co_no_reserved_words_error")
-  syntax match coReservedError /\<\%(const\|enum\|export\)\>/
+  syntax match coReservedError /\<\%(var\|const\|enum\|export\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
   highlight default link coReservedError Error
 endif
 
@@ -138,14 +127,20 @@ syntax region coHeredoc start=/"""/ end=/"""/ contains=@coInterpString fold
 syntax region coHeredoc start=/'''/ end=/'''/ contains=@coSimpleString fold
 highlight default link coHeredoc String
 
+syntax match coWord /\\\S[^ \t\n\r,;)}\]]*/
+highlight default link coWord String
+
+syntax region coWords start=/<\[/ end=/\]>/ contains=fold
+highlight default link coWords String
+
 " Displays an error for trailing whitespace.
-if !exists("co_no_trailing_space_error")
+if !exists("coco_no_trailing_space_error")
   syntax match coSpaceError /\S\@<=\s\+$/ display
   highlight default link coSpaceError Error
 endif
 
 " Displays an error for trailing semicolons.
-if !exists("co_no_trailing_semicolon_error")
+if !exists("coco_no_trailing_semicolon_error")
   syntax match coSemicolonError /;$/ display
   highlight default link coSemicolonError Error
 endif
