@@ -32,6 +32,10 @@ endif
 
 " Compile snippet.
 command! -range=% CocoCompile <line1>,<line2>:w !coco -scb
+
 " Compile the current file.
-command! -bang -bar -nargs=* CocoMake exec 'make<bang>' coco_make_options '<args>'
+function! s:CocoMake(bang, args)
+  exec ('make' . a:bang) g:coco_make_options a:args fnameescape(expand('%'))
+endfunction
+command! -bang -bar -nargs=* CocoMake call s:CocoMake(<q-bang>, <q-args>)
 
