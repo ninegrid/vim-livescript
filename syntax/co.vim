@@ -19,6 +19,9 @@ syntax sync minlines=100
 " CoffeeScript allows dollar signs in identifiers.
 setlocal isident+=$
 
+syntax match coProp /[$A-Za-z_][$A-Za-z0-9_]*[ \t]*:[:=]\@!/
+highlight default link coProp Label
+
 " These are 'matches' rather than 'keywords' because vim's highlighting priority
 " for keywords (the highest) causes them to be wrongly highlighted when used as
 " dot-properties.
@@ -62,8 +65,7 @@ syntax match coConstant /\<\u[A-Z0-9_]\+\>/
 highlight default link coConstant Constant
 
 " What can make up a variable name
-syntax cluster coIdentifier contains=coVar,coObject,coConstant,
-\                                    coPrototype
+syntax cluster coIdentifier contains=coVar,coObject,coConstant
 
 syntax region coString start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@coInterpString
 syntax region coString start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=@coSimpleString
@@ -84,9 +86,6 @@ if !exists("co_no_reserved_words_error")
   syntax match coReservedError /\<\%(var\|const\|enum\|export\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
   highlight default link coReservedError Error
 endif
-
-syntax match coPrototype /::/
-highlight default link coPrototype SpecialChar
 
 syntax match coFunction /[-~]>/
 highlight default link coFunction Function
@@ -127,7 +126,7 @@ syntax region coHeredoc start=/"""/ end=/"""/ contains=@coInterpString fold
 syntax region coHeredoc start=/'''/ end=/'''/ contains=@coSimpleString fold
 highlight default link coHeredoc String
 
-syntax match coWord /\\\S[^ \t\n\r,;)}\]]*/
+syntax match coWord /\\\S[^ \t\r,;)}\]]*/
 highlight default link coWord String
 
 syntax region coWords start=/<\[/ end=/\]>/ contains=fold
