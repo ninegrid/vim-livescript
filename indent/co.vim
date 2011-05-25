@@ -22,14 +22,14 @@ endif
 
 " Keywords to indent after
 let s:INDENT_AFTER_KEYWORD = '^\%(if\|unless\|else\|for\|while\|until\|'
-\                          . 'loop\|switch\|when\|try\|catch\|finally\|'
+\                          . 'switch\|case\|default\|try\|catch\|finally\|'
 \                          . 'class\)\>'
 
 " Operators to indent after
 let s:INDENT_AFTER_OPERATOR = '\%([([{:=]\|[-=]>\)$'
 
 " Keywords and operators that continue a line
-let s:CONTINUATION = '\<\%(is\|isnt\|and\|or\)\>$'
+let s:CONTINUATION = '\<\%(is\|and\|or\)\>$'
 \                  . '\|'
 \                  . '\%(-\@<!-\|+\@<!+\|<\|[-=]\@<!>\|\*\|/\@<!/\|%\||\|'
 \                  . '&\|,\|\.\@<!\.\)$'
@@ -162,7 +162,7 @@ function! s:GetMatch(curline)
   elseif firstchar == ']'
     return s:SearchPair('\[', '\]')
   elseif a:curline =~ '^else\>'
-    return s:SearchPair('\<\%(if\|unless\|when\)\>', '\<else\>')
+    return s:SearchPair('\<\%(if\|unless\|case\)\>', '\<else\>')
   elseif a:curline =~ '^catch\>'
     return s:SearchPair('\<try\>', '\<catch\>')
   elseif a:curline =~ '^finally\>'
@@ -208,19 +208,6 @@ function! s:GetCoffeeIndent(curlinenum)
 
   if matchlinenum
     return indent(matchlinenum)
-  endif
-
-  " Try to find a matching `when`.
-  if curline =~ '^when\>' && !s:SmartSearch(prevlinenum, '\<switch\>')
-    let linenum = a:curlinenum
-
-    while linenum > 0
-      let linenum = s:GetPrevNormalLine(linenum)
-
-      if getline(linenum) =~ '^\s*when\>'
-        return indent(linenum)
-      endif
-    endwhile
   endif
 
   let prevline = s:GetTrimmedLine(prevlinenum)
