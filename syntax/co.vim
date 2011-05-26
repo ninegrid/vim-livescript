@@ -40,7 +40,7 @@ highlight default link coException Exception
 syntax match coOperator /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|import\%( all\)\?\|extends\|from\|to\|by\)\>/
 highlight default link coOperator Operator
 
-syntax match coKeyword /\<\%(this\|arguments\|do\|then\|function\|class\|let\|with\|eval\|super\)\>/
+syntax match coKeyword /\<\%(do\|then\|function\|class\|let\|with\|eval\|super\)\>/
 highlight default link coKeyword Keyword
 
 syntax match coBoolean /\<\%(true\|false\|null\|void\)\>/
@@ -51,9 +51,9 @@ syntax cluster coReserved contains=coStatement,coRepeat,coConditional,
 \                                  coException,coOperator,coKeyword,
 \                                  coBoolean
 
-" Matches thisprops like @abc.
-syntax match coVar /@@\?\%(\I\i*\)\?/
-highlight default link coVar Type
+" Matches function contexts.
+syntax match coContext /@\+\|\<\%(this\|arguments\)\>/
+highlight default link coContext Type
 
 " Matches class-like names that start with a capital letter, like Array or
 " Object.
@@ -65,7 +65,7 @@ syntax match coConstant /\<\u[A-Z0-9_]\+\>/
 highlight default link coConstant Constant
 
 " What can make up a variable name
-syntax cluster coIdentifier contains=coVar,coObject,coConstant
+syntax cluster coIdentifier contains=coObject,coConstant
 
 syntax region coString start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@coInterpString
 syntax region coString start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=@coSimpleString
@@ -134,7 +134,7 @@ highlight default link coWords String
 
 " Displays an error for trailing whitespace.
 if !exists("coco_no_trailing_space_error")
-  syntax match coSpaceError /\S\@<=\s\+$/ display
+  syntax match coSpaceError /\s\+$/ display
   highlight default link coSpaceError Error
 endif
 
@@ -144,8 +144,8 @@ if !exists("coco_no_trailing_semicolon_error")
   highlight default link coSemicolonError Error
 endif
 
-" Reserved words can be used as dot-properties.
-syntax match coDot /\.\@<!\.\i\+/ transparent
-\                                     contains=ALLBUT,@coReserved,
-\                                                      coReservedError
+" Reserved words can be used as property keys.
+syntax match coKey  /\%(\.\@<!\.\s+\|[]})@]\|::\)\i\+/
+\                     transparent contains=ALLBUT,@coReserved
+\                                                ,coReservedError
 
