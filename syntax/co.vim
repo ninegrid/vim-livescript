@@ -120,7 +120,7 @@ syntax region coRegex start=/\%(\%()\|\i\@<!\d\)\s*\|\i\)\@<!\/\s\@!/
 \                         skip=/\[[^]]\{-}\/[^]]\{-}\]/
 \                         end=/\/[gimy$]\{,4}/
 \                         oneline contains=@coSimpleString
-syntax region coHeregex start=/\/\// end=/\/\/[gimy$?]\{,4}/ contains=@coInterpString,coComment fold
+syntax region coHeregex start=/\/\// end=/\/\/[gimy$?]\{,4}/ contains=@coInterpString,coComment,coSpaceError fold
 highlight default link coHeregex coRegex
 highlight default link coRegex String
 
