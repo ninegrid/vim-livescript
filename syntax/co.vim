@@ -40,7 +40,7 @@ highlight default link coException Exception
 syntax match coOperator /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|import\%( all\)\?\|extends\|from\|to\|by\)\>/
 highlight default link coOperator Operator
 
-syntax match coKeyword /\<\%(do\|then\|function\|class\|let\|with\|eval\|super\)\>/
+syntax match coKeyword /\<\%(do\|then\|class\|let\|with\|eval\|super\)\>/
 highlight default link coKeyword Keyword
 
 syntax match coBoolean /\<\%(true\|false\|null\|void\)\>/
@@ -89,7 +89,7 @@ if !exists("co_no_reserved_words_error")
   highlight default link coReservedError Error
 endif
 
-syntax match coFunction /[-~]>/
+syntax match coFunction /[-~]>\|\<function\>/
 highlight default link coFunction Function
 
 syntax keyword coTodo TODO FIXME XXX contained
@@ -118,9 +118,9 @@ syntax cluster coInterpString contains=@coSimpleString,
 
 syntax region coRegex start=/\%(\%()\|\i\@<!\d\)\s*\|\i\)\@<!\/\s\@!/
 \                         skip=/\[[^]]\{-}\/[^]]\{-}\]/
-\                         end=/\/[gimy]\{,4}\d\@!/
+\                         end=/\/[gimy$]\{,4}/
 \                         oneline contains=@coSimpleString
-syntax region coHeregex start=/\/\// end=/\/\/\%(?\|[gimy]\{,4}\)/ contains=@coInterpString,coComment fold
+syntax region coHeregex start=/\/\// end=/\/\/[gimy$?]\{,4}/ contains=@coInterpString,coComment fold
 highlight default link coHeregex coRegex
 highlight default link coRegex String
 
