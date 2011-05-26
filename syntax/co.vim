@@ -72,9 +72,11 @@ syntax region coString start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=@coSimpleStri
 highlight default link coString String
 
 " Matches numbers like 10, 10e8, 10E8, 10, 10e8, 10E8.
-syntax match coNumber /\d\+\%([eE][+-]\?\d\+\)\?/
+syntax match coNumber /\<\d[0-9_]*\%([eE][+-]\?\d[0-9_]*\)\?/
 " Matches hex numbers like 0xfff, 0x000.
 syntax match coNumber /\<0[xX]\x\+\>/
+" Matches N radix numbers like 2r1010.
+syntax match coNumber /\<\%([2-9]\|[12]\d\|3[0-6]\)[rR][0-9A-Za-z][0-9A-Za-z_]*\>/
 highlight default link coNumber Number
 
 " Matches floating-point numbers like 10.42e-8.
