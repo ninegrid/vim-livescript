@@ -46,26 +46,25 @@ highlight default link coKeyword Keyword
 syntax match coBoolean /\<\%(true\|false\|null\|void\)\>/
 highlight default link coBoolean Boolean
 
-" Keywords reserved by the language
-syntax cluster coReserved contains=coStatement,coRepeat,coConditional,
-\                                  coException,coOperator,coKeyword,
-\                                  coBoolean
-
 " Matches function contexts.
 syntax match coContext /@\+\|\<\%(this\|arguments\)\>/
 highlight default link coContext Type
 
-" Matches class-like names that start with a capital letter, like Array or
-" Object.
-syntax match coObject /\<\u\w*\>/
-highlight default link coObject Structure
+" Keywords reserved by the language
+syntax cluster coReserved contains=coStatement,coRepeat,coConditional,
+\                                  coException,coOperator,coKeyword,
+\                                  coBoolean,coContext
 
 " Matches constant-like names in SCREAMING_CAPS.
 syntax match coConstant /\<\u[A-Z0-9_]\+\>/
 highlight default link coConstant Constant
 
+" Matches ECMAScript 5 built-in globals.
+syntax match coGlobal /\<\%(Array\|Boolean\|Date\|Function\|JSON\|Math\|Number\|Object\|RegExp\|String\|\%(Syntax\|Type\|URI\)\?Error\|is\%(NaN\|Finite\)\|parse\%(Int\|Float\)\|\%(en\|de\)codeURI\%(Component\)\?\)\>/
+highlight default link coGlobal Structure
+
 " What can make up a variable name
-syntax cluster coIdentifier contains=coObject,coConstant
+syntax cluster coIdentifier contains=coConstant,coGlobal
 
 syntax region coString start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@coInterpString
 syntax region coString start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=@coSimpleString
