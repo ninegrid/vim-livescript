@@ -16,7 +16,7 @@ let b:current_syntax = "co"
 " Highlight long strings.
 syntax sync minlines=100
 
-" CoffeeScript allows dollar signs in identifiers.
+" Coco allows dollar signs in identifiers.
 setlocal isident+=$
 
 syntax match coProp /[$A-Za-z_][$A-Za-z0-9_]*[ \t]*:[:=]\@!/
@@ -89,7 +89,7 @@ if !exists("co_no_reserved_words_error")
   highlight default link coReservedError Error
 endif
 
-syntax match coFunction /[-~]>\|\<function\>/
+syntax match coFunction /[-~]>\|\<function\>\|<[-~]/
 highlight default link coFunction Function
 
 syntax keyword coTodo TODO FIXME XXX contained
@@ -110,11 +110,14 @@ highlight default link coInterpDelim Delimiter
 syntax match coEscape /\\\d\d\d\|\\x\x\{2\}\|\\u\x\{4\}\|\\./ contained
 highlight default link coEscape SpecialChar
 
+syntax match coVarInterpolation /#[$A-Za-z_][$A-Za-z0-9_]*/ contained
+highlight default link coVarInterpolation Identifier
+
 " What is in a non-interpolated string
 syntax cluster coSimpleString contains=@Spell,coEscape
 " What is in an interpolated string
 syntax cluster coInterpString contains=@coSimpleString,
-\                                           coInterpolation
+\                                      coInterpolation,coVarInterpolation
 
 syntax region coRegex start=/\%(\%()\|\i\@<!\d\)\s*\|\i\)\@<!\/\s\@!/
 \                         skip=/\[[^]]\{-}\/[^]]\{-}\]/
