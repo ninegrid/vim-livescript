@@ -19,6 +19,9 @@ syntax sync minlines=100
 " Coco allows dollar signs in identifiers.
 setlocal isident+=$
 
+syntax match coIdentifier /[$A-Za-z_][$A-Za-z0-9_]*/
+highlight default link coIdentifier Identifier
+
 syntax match coProp /[$A-Za-z_][$A-Za-z0-9_]*[ \t]*:[:=]\@!/
 highlight default link coProp Label
 
@@ -55,16 +58,9 @@ syntax cluster coReserved contains=coStatement,coRepeat,coConditional,
 \                                  coException,coOperator,coKeyword,
 \                                  coBoolean,coContext
 
-" Matches constant-like names in SCREAMING_CAPS.
-syntax match coConstant /\<\u[A-Z0-9_]\+\>/
-highlight default link coConstant Constant
-
 " Matches ECMAScript 5 built-in globals.
 syntax match coGlobal /\<\%(Array\|Boolean\|Date\|Function\|JSON\|Math\|Number\|Object\|RegExp\|String\|\%(Syntax\|Type\|URI\)\?Error\|is\%(NaN\|Finite\)\|parse\%(Int\|Float\)\|\%(en\|de\)codeURI\%(Component\)\?\)\>/
 highlight default link coGlobal Structure
-
-" What can make up a variable name
-syntax cluster coIdentifier contains=coConstant,coGlobal
 
 syntax region coString start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@coInterpString
 syntax region coString start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=@coSimpleString
@@ -149,7 +145,6 @@ if !exists("coco_no_trailing_semicolon_error")
 endif
 
 " Reserved words can be used as property keys.
-syntax match coKey  /\%(\.\@<!\.\%(\s*\|\.\)\|[]})@]\|::\)\i\+/
-\                     transparent contains=ALLBUT,@coReserved
-\                                                ,coReservedError
-
+syntax match coKey /\%(\.\@<!\.\%(\s*\|\.\)\|[]})@]\|::\)\@<=[$A-Za-z_][$A-Za-z0-9_]*/
+\                  transparent contains=ALLBUT
+\                                      ,coIdentifier,@coReserved,coReservedError 
