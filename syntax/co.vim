@@ -75,7 +75,7 @@ syntax match coNumber /\<\%([2-9]\|[12]\d\|3[0-6]\)[rR][0-9A-Za-z][0-9A-Za-z_]*\
 highlight default link coNumber Number
 
 " Matches floating-point numbers like 10.42e-8.
-syntax match coFloat /\d*\.\@<!\.\d\+\%([eE][+-]\?\d\+\)\?/
+syntax match coFloat /\d[0-9_]*\%(\.\d[0-9_]*\)\?\%([eE][+-]\?\d[0-9_]*\)\?[A-Za-z_]*/
 highlight default link coFloat Float
 
 " Displays an error for reserved words.
