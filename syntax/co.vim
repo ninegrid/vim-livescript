@@ -43,7 +43,7 @@ highlight default link coException Exception
 syntax match coOperator /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|import\%( all\)\?\|extends\|from\|to\|by\)\>/
 highlight default link coOperator Operator
 
-syntax match coKeyword /\<\%(do\|then\|class\|let\|with\|eval\|super\)\>/
+syntax match coKeyword /\<\%(do\|then\|function\|class\|let\|with\|eval\|super\)\>/
 highlight default link coKeyword Keyword
 
 syntax match coBoolean /\<\%(true\|false\|null\|void\)\>/
@@ -83,9 +83,6 @@ if !exists("co_no_reserved_words_error")
   syntax match coReservedError /\<\%(var\|const\|enum\|export\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
   highlight default link coReservedError Error
 endif
-
-syntax match coFunction /[-~]>\|\<function\>\|<[-~]/
-highlight default link coFunction Function
 
 syntax keyword coTodo TODO FIXME XXX contained
 highlight default link coTodo Todo
