@@ -40,7 +40,7 @@ highlight default link coConditional Conditional
 syntax match coException /\<\%(try\|catch\|finally\)\>/
 highlight default link coException Exception
 
-syntax match coOperator /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|import\%( all\)\?\|extends\|from\|to\|by\)\>/
+syntax match coOperator /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|import\%( all\)\?\|extends\|from\|to\|til\|by\)\>/
 highlight default link coOperator Operator
 
 syntax match coKeyword /\<\%(do\|then\|function\|class\|let\|with\|eval\|super\)\>/
