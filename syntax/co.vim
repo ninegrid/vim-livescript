@@ -3,12 +3,8 @@
 " URL:         http://github.com/satyr/vim-coco
 " License:     WTFPL
 
-if exists("b:current_syntax")
+if exists('b:current_syntax') && b:current_syntax == 'coco'
   finish
-endif
-
-if version < 600
-  syntax clear
 endif
 
 let b:current_syntax = "co"
@@ -145,3 +141,7 @@ endif
 syntax match coKey /\%(\.\@<!\.\%(\s*\|\.\)\|[]})@]\|::\)\@<=[$A-Za-z_][$A-Za-z0-9_]*/
 \                  transparent contains=ALLBUT
 \                                      ,coIdentifier,@coReserved,coReservedError 
+
+if !exists('b:current_syntax')
+  let b:current_syntax = 'coco'
+endif
