@@ -138,7 +138,7 @@ if !exists("coco_no_trailing_semicolon_error")
 endif
 
 " Reserved words can be used as property keys.
-syntax match coKey /\%(\.\@<!\.\%(\s*\|\.\)\|[]})@]\|::\)\@<=[$A-Za-z_][$A-Za-z0-9_]*/
+syntax match coKey /\%(\.\@<!\.\%(\s*\|[.=]\+\)\|[]})@?]\|::\)\@<=[$A-Za-z_][$A-Za-z0-9_]*/
 \                  transparent contains=ALLBUT
 \                                      ,coIdentifier,@coReserved,coReservedError 
 
