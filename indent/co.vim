@@ -10,20 +10,20 @@ endif
 let b:did_indent = 1
 
 setlocal autoindent
-setlocal indentexpr=GetCoffeeIndent(v:lnum)
-" Make sure GetCoffeeIndent is run when these are typed so they can be
+setlocal indentexpr=GetCocoIndent(v:lnum)
+" Make sure GetCocoIndent is run when these are typed so they can be
 " indented or outdented.
 setlocal indentkeys+=0],0),0.,=else,=when,=catch,=finally
 
 " Only define the function once.
-if exists("*GetCoffeeIndent")
+if exists("*GetCocoIndent")
   finish
 endif
 
 " Keywords to indent after
 let s:INDENT_AFTER_KEYWORD = '^\%(if\|unless\|else\|for\|while\|until\|'
-\                          . 'switch\|case\|default\|try\|catch\|finally\|'
-\                          . 'class\)\>'
+\                          . 'case\|default\|try\|catch\|finally\|'
+\                          . 'class\|do\|new\|let\|with\)\>'
 
 " Operators to indent after
 let s:INDENT_AFTER_OPERATOR = '\%([([{:=]\|[-=]>\)$'
@@ -31,7 +31,7 @@ let s:INDENT_AFTER_OPERATOR = '\%([([{:=]\|[-=]>\)$'
 " Keywords and operators that continue a line
 let s:CONTINUATION = '\<\%(is\|and\|or\)\>$'
 \                  . '\|'
-\                  . '\%(-\@<!-\|+\@<!+\|<\|[-=]\@<!>\|\*\|/\@<!/\|%\||\|'
+\                  . '\%(-\@<!-\|+\@<!+\|<\|[-~]\@<!>\|\*\|/\@<!/\|%\||\|'
 \                  . '&\|,\|\.\@<!\.\)$'
 
 " Operators that block continuation indenting
@@ -45,7 +45,7 @@ let s:OUTDENT_AFTER = '^\%(return\|break\|continue\|throw\)\>'
 
 " A compound assignment like `... = if ...`
 let s:COMPOUND_ASSIGNMENT = '[:=]\s*\%(if\|unless\|for\|while\|until\|'
-\                         . 'switch\|try\|class\)\>'
+\                         . 'try\|class\|do\|new\|let\|with\)\>'
 
 " A postfix condition like `return ... if ...`.
 let s:POSTFIX_CONDITION = '\S\s\+\zs\<\%(if\|unless\)\>'
@@ -193,7 +193,7 @@ function! s:GetTrimmedLine(linenum)
   \                                                '\s\+$', '', '')
 endfunction
 
-function! s:GetCoffeeIndent(curlinenum)
+function! s:GetCocoIndent(curlinenum)
   let prevlinenum = s:GetPrevNormalLine(a:curlinenum)
 
   " Don't do anything if there's no previous line.
@@ -254,10 +254,10 @@ function! s:GetCoffeeIndent(curlinenum)
   return -1
 endfunction
 
-" Wrap s:GetCoffeeIndent to keep the cursor position.
-function! GetCoffeeIndent(curlinenum)
+" Wrap s:GetCocoIndent to keep the cursor position.
+function! GetCocoIndent(curlinenum)
   let oldcursor = getpos('.')
-  let indent = s:GetCoffeeIndent(a:curlinenum)
+  let indent = s:GetCocoIndent(a:curlinenum)
   call setpos('.', oldcursor)
 
   return indent
