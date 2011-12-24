@@ -12,13 +12,12 @@ let b:current_syntax = "co"
 " Highlight long strings.
 syntax sync minlines=100
 
-" Coco allows dollar signs in identifiers.
-setlocal isident+=$
+setlocal iskeyword=48-57,A-Z,$,a-z,_
 
-syntax match coIdentifier /[$A-Za-z_][$A-Za-z0-9_]*/
+syntax match coIdentifier /[$A-Za-z_]\k*/
 highlight default link coIdentifier Identifier
 
-syntax match coProp /[$A-Za-z_][$A-Za-z0-9_]*[ \t]*:[:=]\@!/
+syntax match coProp /[$A-Za-z_]\k*[ \t]*:[:=]\@!/
 highlight default link coProp Label
 
 " These are 'matches' rather than 'keywords' because vim's highlighting priority
@@ -98,7 +97,7 @@ highlight default link coInterpDelim Delimiter
 syntax match coEscape /\\\d\d\d\|\\x\x\{2\}\|\\u\x\{4\}\|\\./ contained
 highlight default link coEscape SpecialChar
 
-syntax match coVarInterpolation /#[$A-Za-z_][$A-Za-z0-9_]*/ contained
+syntax match coVarInterpolation /#[$A-Za-z_]\k*/ contained
 highlight default link coVarInterpolation Identifier
 
 " What is in a non-interpolated string
@@ -138,9 +137,9 @@ if !exists("coco_no_trailing_semicolon_error")
 endif
 
 " Reserved words can be used as property keys.
-syntax match coKey /\%(\.\@<!\.\%(=\?\s*\|\.\)\|[]})@?]\|::\)\zs[a-z]\+/
-\                  transparent contains=ALLBUT
-\                                      ,coIdentifier,@coReserved,coReservedError 
+syntax match coKey
+\ /\%(\.\@<!\.\%(=\?\s*\|\.\)\|[]})@?]\|::\)\zs\k\+/
+\ transparent contains=ALLBUT,coIdentifier,@coReserved,coReservedError
 
 if !exists('b:current_syntax')
   let b:current_syntax = 'coco'
