@@ -17,9 +17,6 @@ setlocal iskeyword=48-57,A-Z,$,a-z,_
 syntax match coIdentifier /[$A-Za-z_]\k*/
 highlight default link coIdentifier Identifier
 
-syntax match coProp /[$A-Za-z_]\k*[ \t]*:[:=]\@!/
-highlight default link coProp Label
-
 " These are 'matches' rather than 'keywords' because vim's highlighting priority
 " for keywords (the highest) causes them to be wrongly highlighted when used as
 " dot-properties.
@@ -44,14 +41,13 @@ highlight default link coKeyword Keyword
 syntax match coBoolean /\<\%(true\|false\|null\|void\)\>/
 highlight default link coBoolean Boolean
 
-" Matches function contexts.
-syntax match coContext /@\+\|\<\%(this\|arguments\)\>/
+" Matches context variables.
+syntax match coContext /\<\%(this\|arguments\|it\|that\|constructor\|prototype\|superclass\)\>/
 highlight default link coContext Type
 
 " Keywords reserved by the language
 syntax cluster coReserved contains=coStatement,coRepeat,coConditional,
-\                                  coException,coOperator,coKeyword,
-\                                  coBoolean,coContext
+\                                  coException,coOperator,coKeyword,coBoolean
 
 " Matches ECMAScript 5 built-in globals.
 syntax match coGlobal /\<\%(Array\|Boolean\|Date\|Function\|JSON\|Math\|Number\|Object\|RegExp\|String\|\%(Syntax\|Type\|URI\)\?Error\|is\%(NaN\|Finite\)\|parse\%(Int\|Float\)\|\%(en\|de\)codeURI\%(Component\)\?\)\>/
@@ -74,7 +70,7 @@ syntax match coFloat /\d[0-9_]*\%(\.\d[0-9_]*\)\?\%([eE][+-]\?\d[0-9_]*\)\?[A-Za
 highlight default link coFloat Float
 
 " Displays an error for reserved words.
-if !exists("co_no_reserved_words_error")
+if !exists("coco_no_reserved_words_error")
   syntax match coReservedError /\<\%(var\|const\|enum\|export\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
   highlight default link coReservedError Error
 endif
@@ -124,6 +120,14 @@ highlight default link coWord String
 syntax region coWords start=/<\[/ end=/\]>/ contains=fold
 highlight default link coWords String
 
+" Reserved words can be used as property names.
+syntax match coProp /[$A-Za-z_]\k*[ \t]*:[:=]\@!/
+highlight default link coProp Label
+
+syntax match coKey
+\ /\%(\.\@<!\.\%(=\?\s*\|\.\)\|[]})@?]\|::\)\zs\k\+/
+\ transparent contains=ALLBUT,coIdentifier,coGlobal,coReservedError,@coReserved
+
 " Displays an error for trailing whitespace.
 if !exists("coco_no_trailing_space_error")
   syntax match coSpaceError /\s\+$/ display
@@ -135,11 +139,6 @@ if !exists("coco_no_trailing_semicolon_error")
   syntax match coSemicolonError /;$/ display
   highlight default link coSemicolonError Error
 endif
-
-" Reserved words can be used as property keys.
-syntax match coKey
-\ /\%(\.\@<!\.\%(=\?\s*\|\.\)\|[]})@?]\|::\)\zs\k\+/
-\ transparent contains=ALLBUT,coIdentifier,@coReserved,coReservedError
 
 if !exists('b:current_syntax')
   let b:current_syntax = 'coco'
