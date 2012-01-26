@@ -54,17 +54,19 @@ syntax region coString start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@coInterpStri
 syntax region coString start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=@coSimpleString
 highlight default link coString String
 
-" Matches numbers like 10, 10e8, 10E8, 10, 10e8, 10E8.
-syntax match coNumber /\<\d[0-9_]*\%([eE][+-]\?\d[0-9_]*\)\?/
-" Matches hex numbers like 0xfff, 0x000.
-syntax match coNumber /\<0[xX]\x\+\>/
-" Matches N radix numbers like 2r1010.
-syntax match coNumber /\<\%([2-9]\|[12]\d\|3[0-6]\)[rR][0-9A-Za-z][0-9A-Za-z_]*\>/
-highlight default link coNumber Number
-
-" Matches floating-point numbers like 10.42e-8.
-syntax match coFloat /\d[0-9_]*\%(\.\d[0-9_]*\)\?\%([eE][+-]\?\d[0-9_]*\)\?[A-Za-z_]*/
+syntax match coNumberComment /\d\zs\k\+$/ contained
+highlight default link coNumberComment Comment
+" Matches decimal/floating-point numbers like 10.42e-8.
+syntax match coFloat
+\ /\<\d[0-9_]*\%(\.\d[0-9_]*\)\?\%(e[+-]\?\d[0-9_]*\)\?\k*/
+\ contains=coNumberComment
 highlight default link coFloat Float
+" Matches hex numbers like 0xfff, 0x000.
+syntax match coNumber /\<0x\x\+/
+" Matches N radix numbers like 2r1010.
+syntax match coNumber
+\ /\<\%([2-9]\|[12]\d\|3[0-6]\)r[0-9A-Za-z][0-9A-Za-z_]*/
+highlight default link coNumber Number
 
 " Displays an error for reserved words.
 if !exists("coco_no_reserved_words_error")
