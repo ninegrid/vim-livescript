@@ -54,13 +54,13 @@ syntax region coString start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@coInterpStri
 syntax region coString start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=@coSimpleString
 highlight default link coString String
 
-syntax match coNumberComment /\d\zs\k\+$/ contained
-highlight default link coNumberComment Comment
 " Matches decimal/floating-point numbers like 10.42e-8.
 syntax match coFloat
 \ /\<\d[0-9_]*\%(\.\d[0-9_]*\)\?\%(e[+-]\?\d[0-9_]*\)\?\k*/
 \ contains=coNumberComment
 highlight default link coFloat Float
+syntax match coNumberComment /\d\+\zs\%(e\d\)\@!\k\+$/ contained
+highlight default link coNumberComment Comment
 " Matches hex numbers like 0xfff, 0x000.
 syntax match coNumber /\<0x\x\+/
 " Matches N radix numbers like 2r1010.
