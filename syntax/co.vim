@@ -125,7 +125,8 @@ highlight default link coProp Label
 
 syntax match coKey
 \ /\%(\.\@<!\.\%(=\?\s*\|\.\)\|[]})@?]\|::\)\zs\k\+/
-\ transparent contains=ALLBUT,coIdentifier,coGlobal,coReservedError,@coReserved
+\ transparent
+\ contains=ALLBUT,coIdentifier,coContext,coGlobal,coReservedError,@coReserved 
 
 " Displays an error for trailing whitespace.
 if !exists("coco_no_trailing_space_error")
