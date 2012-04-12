@@ -32,7 +32,7 @@ highlight default link coConditional Conditional
 syntax match coException /\<\%(try\|catch\|finally\)\>/
 highlight default link coException Exception
 
-syntax match coKeyword /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|import\%( all\)\?\|extends\|from\|to\|til\|by\|do\|then\|function\|class\|let\|with\|eval\|super\|fallthrough\)\>/
+syntax match coKeyword /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|import\%( all\)\?\|extends\|from\|to\|til\|by\|do\|then\|function\|class\|let\|with\|export\|eval\|super\|fallthrough\)\>/
 highlight default link coKeyword Keyword
 
 syntax match coBoolean /\<\%(true\|false\|null\|void\)\>/
@@ -70,7 +70,7 @@ highlight default link coNumber Number
 
 " Displays an error for reserved words.
 if !exists("coco_no_reserved_words_error")
-  syntax match coReservedError /\<\%(var\|const\|enum\|export\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
+  syntax match coReservedError /\<\%(var\|const\|enum\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
   highlight default link coReservedError Error
 endif
 
