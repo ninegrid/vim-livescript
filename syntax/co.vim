@@ -32,7 +32,7 @@ highlight default link coConditional Conditional
 syntax match coException /\<\%(try\|catch\|finally\)\>/
 highlight default link coException Exception
 
-syntax match coKeyword /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|import\%( all\)\?\|extends\|from\|to\|til\|by\|do\|then\|function\|class\|let\|with\|export\|eval\|super\|fallthrough\)\>/
+syntax match coKeyword /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|import\%( all\)\?\|extends\|from\|to\|til\|by\|do\|then\|function\|class\|let\|with\|export\|eval\|super\|fallthrough\|debugger\)\>/
 highlight default link coKeyword Keyword
 
 syntax match coBoolean /\<\%(true\|false\|null\|void\)\>/
