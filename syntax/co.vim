@@ -77,7 +77,8 @@ endif
 syntax keyword coTodo TODO FIXME XXX contained
 highlight default link coTodo Todo
 
-syntax match coComment /#.*/ contains=@Spell,coTodo
+syntax match  coComment /#.*/                   contains=@Spell,coTodo
+syntax region coComment start=/\/\*/ end=/\*\// contains=@Spell,coTodo
 highlight default link coComment Comment
 
 syntax region coEmbed start=/`/ skip=/\\\\\|\\`/ end=/`/
@@ -101,10 +102,10 @@ syntax cluster coSimpleString contains=@Spell,coEscape
 syntax cluster coInterpString contains=@coSimpleString,
 \                                      coInterpolation,coVarInterpolation
 
-syntax region coRegex start=/\%(\%()\|\i\@<!\d\)\s*\|\i\)\@<!\/\s\@!/
-\                         skip=/\[[^]]\{-}\/[^]]\{-}\]/
-\                         end=/\/[gimy$]\{,4}/
-\                         oneline contains=@coSimpleString
+syntax region coRegex start=/\%(\%()\|\i\@<!\d\)\s*\|\i\)\@<!\/\*\@!/
+\                     skip=/\[[^]]\{-}\/[^]]\{-}\]/
+\                     end=/\/[gimy$]\{,4}/
+\                     oneline contains=@coSimpleString
 syntax region coHeregex start=/\/\// end=/\/\/[gimy$?]\{,4}/ contains=@coInterpString,coComment,coSpaceError fold
 highlight default link coHeregex coRegex
 highlight default link coRegex String
