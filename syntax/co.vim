@@ -69,10 +69,8 @@ syntax match coNumber
 highlight default link coNumber Number
 
 " Displays an error for reserved words.
-if !exists("coco_no_reserved_words_error")
-  syntax match coReservedError /\<\%(var\|const\|enum\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
-  highlight default link coReservedError Error
-endif
+syntax match coReservedError /\<\%(var\|const\|enum\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
+highlight default link coReservedError Error
 
 syntax keyword coTodo TODO FIXME XXX contained
 highlight default link coTodo Todo
@@ -130,16 +128,8 @@ syntax match coKey
 \ contains=ALLBUT,coIdentifier,coContext,coGlobal,coReservedError,@coReserved 
 
 " Displays an error for trailing whitespace.
-if !exists("coco_no_trailing_space_error")
-  syntax match coSpaceError /\s\+$/ display
-  highlight default link coSpaceError Error
-endif
-
-" Displays an error for trailing semicolons.
-if !exists("coco_no_trailing_semicolon_error")
-  syntax match coSemicolonError /;$/ display
-  highlight default link coSemicolonError Error
-endif
+syntax match coSpaceError /\s\+$/ display
+highlight default link coSpaceError Error
 
 if !exists('b:current_syntax')
   let b:current_syntax = 'coco'

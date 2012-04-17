@@ -14,60 +14,30 @@ setlocal comments=:#
 setlocal commentstring=#\ %s
 setlocal omnifunc=javascriptcomplete#CompleteJS
 
-" Extra options passed to CocoMake
-if !exists("coco_make_options")
-  let coco_make_options = ""
-endif
-
 " Enable CocoMake if it won't overwrite any settings.
 if !len(&l:makeprg)
   compiler co
 endif
 
-" Reset the global variables used by CocoCompile.
-function! s:CocoCompileResetVars()
-  " Position in the source buffer
-  let s:coco_compile_src_buf = -1
-  let s:coco_compile_src_pos = []
+" Check here too in case the compiler above isn't loaded.
+if !exists('coco_compiler')
+  let coco_compiler = 'coco'
+endif
 
-  " Position in the CocoCompile buffer
-  let s:coco_compile_buf = -1
-  let s:coco_compile_win = -1
-  let s:coco_compile_pos = []
+" Reset the CocoCompile variables for the current buffer.
+function! s:CocoCompileResetVars()
+  " Compiled output buffer
+  let b:coco_compile_buf = -1
+  let b:coco_compile_pos = []
 
   " If CocoCompile is watching a buffer
-  let s:coco_compile_watch = 0
+  let b:coco_compile_watch = 0
 endfunction
 
-" Save the cursor position when moving to and from the CocoCompile buffer.
-function! s:CocoCompileSavePos()
-  let buf = bufnr('%')
-  let pos = getpos('.')
-
-  if buf == s:coco_compile_buf
-    let s:coco_compile_pos = pos
-  else
-    let s:coco_compile_src_buf = buf
-    let s:coco_compile_src_pos = pos
-  endif
-endfunction
-
-" Restore the cursor to the source buffer.
-function! s:CocoCompileRestorePos()
-  let win = bufwinnr(s:coco_compile_src_buf)
-
-  if win != -1
-    exec win 'wincmd w'
-    call setpos('.', s:coco_compile_src_pos)
-  endif
-endfunction
-
-" Close the CocoCompile buffer and clean things up.
+" Clean things up in the source buffer.
 function! s:CocoCompileClose()
-  silent! autocmd! CocoCompileAuPos
-  silent! autocmd! CocoCompileAuWatch
-
-  call s:CocoCompileRestorePos()
+  exec bufwinnr(b:coco_compile_src_buf) 'wincmd w'
+  silent! autocmd! CocoCompileAuWatch * <buffer>
   call s:CocoCompileResetVars()
 endfunction
 
@@ -75,16 +45,22 @@ endfunction
 function! s:CocoCompileUpdate(startline, endline)
   let input = join(getline(a:startline, a:endline), "\n")
 
+  " Move to the CocoCompile buffer.
+  exec bufwinnr(b:coco_compile_buf) 'wincmd w'
+
   " Coco doesn't like empty input.
   if !len(input)
     return
   endif
 
   " Compile input.
-  let output = system('coco -scb 2>&1', input)
+  let output = system(g:coco_compiler . ' -scb 2>&1', input)
 
-  " Move to the CocoCompile buffer.
-  exec s:coco_compile_win 'wincmd w'
+  " Be sure we're in the CocoCompile buffer before overwriting.
+  if exists('b:coco_compile_buf')
+    echoerr 'CocoCompile buffers are messed up'
+    return
+  endif
 
   " Replace buffer contents with new output and delete the last empty line.
   setlocal modifiable
@@ -100,87 +76,94 @@ function! s:CocoCompileUpdate(startline, endline)
     setlocal filetype=javascript
   endif
 
-  " Restore the cursor in the compiled output.
-  call setpos('.', s:coco_compile_pos)
+  call setpos('.', b:coco_compile_pos)
 endfunction
 
-" Update the CocoCompile buffer with the whole source buffer and restore the
-" cursor.
+" Update the CocoCompile buffer with the whole source buffer.
 function! s:CocoCompileWatchUpdate()
-  call s:CocoCompileSavePos()
   call s:CocoCompileUpdate(1, '$')
-  call s:CocoCompileRestorePos()
+  exec bufwinnr(b:coco_compile_src_buf) 'wincmd w'
 endfunction
 
 " Peek at compiled CocoScript in a scratch buffer. We handle ranges like this
 " to prevent the cursor from being moved (and its position saved) before the
 " function is called.
 function! s:CocoCompile(startline, endline, args)
-  " Don't compile the CocoCompile buffer.
-  if bufnr('%') == s:coco_compile_buf
+  if !executable(g:coco_compiler)
+    echoerr "Can't find CocoScript compiler `" . g:coco_compiler . "`"
     return
+  endif
+
+  " If in the CocoCompile buffer, switch back to the source buffer and
+  " continue.
+  if !exists('b:coco_compile_buf')
+    exec bufwinnr(b:coco_compile_src_buf) 'wincmd w'
   endif
 
   " Parse arguments.
   let watch = a:args =~ '\<watch\>'
   let unwatch = a:args =~ '\<unwatch\>'
-  let vert = a:args =~ '\<vert\%[ical]\>'
   let size = str2nr(matchstr(a:args, '\<\d\+\>'))
 
+  " Determine default split direction.
+  if exists('g:coco_compile_vert')
+    let vert = 1
+  else
+    let vert = a:args =~ '\<vert\%[ical]\>'
+  endif
+
   " Remove any watch listeners.
-  silent! autocmd! CocoCompileAuWatch
+  silent! autocmd! CocoCompileAuWatch * <buffer>
 
   " If just unwatching, don't compile.
   if unwatch
-    let s:coco_compile_watch = 0
+    let b:coco_compile_watch = 0
     return
   endif
 
   if watch
-    let s:coco_compile_watch = 1
+    let b:coco_compile_watch = 1
   endif
 
-  call s:CocoCompileSavePos()
-
   " Build the CocoCompile buffer if it doesn't exist.
-  if s:coco_compile_buf == -1
-    let src_win = bufwinnr(s:coco_compile_src_buf)
+  if bufwinnr(b:coco_compile_buf) == -1
+    let src_buf = bufnr('%')
+    let src_win = bufwinnr(src_buf)
 
     " Create the new window and resize it.
     if vert
       let width = size ? size : winwidth(src_win) / 2
 
-      vertical new
+      belowright vertical new
       exec 'vertical resize' width
     else
       " Try to guess the compiled output's height.
       let height = size ? size : min([winheight(src_win) / 2,
-      \                               (a:endline - a:startline) * 2 + 4])
+      \                               a:endline - a:startline + 2])
 
-      botright new
+      belowright new
       exec 'resize' height
     endif
 
-    " Set up scratch buffer.
+    " We're now in the scratch buffer, so set it up.
     setlocal bufhidden=wipe buftype=nofile
     setlocal nobuflisted nomodifiable noswapfile nowrap
 
     autocmd BufWipeout <buffer> call s:CocoCompileClose()
+    " Save the cursor when leaving the CocoCompile buffer.
+    autocmd BufLeave <buffer> let b:coco_compile_pos = getpos('.')
+
     nnoremap <buffer> <silent> q :hide<CR>
 
-    " Save the cursor position on each buffer switch.
-    augroup CocoCompileAuPos
-      autocmd BufEnter,BufLeave * call s:CocoCompileSavePos()
-    augroup END
+    let b:coco_compile_src_buf = src_buf
+    let buf = bufnr('%')
 
-    let s:coco_compile_buf = bufnr('%')
-    let s:coco_compile_win = bufwinnr(s:coco_compile_buf)
+    " Go back to the source buffer and set it up.
+    exec bufwinnr(b:coco_compile_src_buf) 'wincmd w'
+    let b:coco_compile_buf = buf
   endif
 
-  " Go back to the source buffer and do the initial compile.
-  call s:CocoCompileRestorePos()
-
-  if s:coco_compile_watch
+  if b:coco_compile_watch
     call s:CocoCompileWatchUpdate()
 
     augroup CocoCompileAuWatch
@@ -208,7 +191,7 @@ function! s:CocoCompileComplete(arg, cmdline, cursor)
   endfor
 endfunction
 
-" Don't let new windows overwrite the CocoCompile variables.
+" Don't overwrite the CoffeeCompile variables.
 if !exists("s:coco_compile_buf")
   call s:CocoCompileResetVars()
 endif
@@ -217,4 +200,4 @@ endif
 command! -range=% -bar -nargs=* -complete=customlist,s:CocoCompileComplete
 \        CocoCompile call s:CocoCompile(<line1>, <line2>, <q-args>)
 " Run some Coco.
-command! -range=% -bar CocoRun <line1>,<line2>:w !coco -seb
+command! -range=% -bar CocoRun <line1>,<line2>:w !coco -sp

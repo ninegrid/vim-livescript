@@ -11,16 +11,38 @@ let current_compiler = 'co'
 " Pattern to check if coco is the compiler
 let s:pat = '^' . current_compiler
 
+" Path to Coco compiler
+if !exists('coco_compiler')
+  let coco_compiler = 'coco'
+endif
+
+if !exists('coco_make_options')
+  let coco_make_options = ''
+endif
+
 " Get a `makeprg` for the current filename. This is needed to support filenames
 " with spaces and quotes, but also not break generic `make`.
 function! s:GetMakePrg()
-  return escape('coco -c' . g:coco_make_options    
-  \                         . ' $* '                   
-  \                         . fnameescape(expand('%')),
-  \             ' ')                                   
+  return g:coco_compiler . ' -c ' . g:coco_make_options . ' $* '
+  \                      . fnameescape(expand('%'))
 endfunction
 
-exec 'CompilerSet makeprg=' . s:GetMakePrg()
+" Set `makeprg` and return 1 if coffee is still the compiler, else return 0.
+function! s:SetMakePrg()
+  if &l:makeprg =~ s:pat
+    let &l:makeprg = s:GetMakePrg()
+  elseif &g:makeprg =~ s:pat
+    let &g:makeprg = s:GetMakePrg()
+  else
+    return 0
+  endif
+
+  return 1
+endfunction
+
+" Set a dummy compiler so we can check whether to set locally or globally.
+CompilerSet makeprg=coco
+call s:SetMakePrg()
 
 CompilerSet errorformat=%EFailed\ at:\ %f,
                        \%CSyntaxError:\ %m\ on\ line\ %l,
@@ -37,11 +59,7 @@ augroup CocoUpdateMakePrg
   " Update `makeprg` if coco is still the compiler, else stop running this
   " function.
   function! s:UpdateMakePrg()
-    if &l:makeprg =~ s:pat
-      let &l:makeprg = s:GetMakePrg()
-    elseif &g:makeprg =~ s:pat
-      let &g:makeprg = s:GetMakePrg()
-    else
+    if !s:SetMakePrg()
       autocmd! CocoUpdateMakePrg
     endif
   endfunction
