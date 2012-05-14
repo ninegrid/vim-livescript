@@ -1,3 +1,6 @@
+### LiveScript
+For more information about LiveScript see [gkz.github.com/LiveScript](http://gkz.github.com/LiveScript/).
+
 ### Installing and Using
 
 1. Install [tpope's][tpope] [pathogen] into `~/.vim/autoload/` and add the
