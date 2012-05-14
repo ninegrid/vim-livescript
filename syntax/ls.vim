@@ -23,10 +23,10 @@ highlight default link lsIdentifier Identifier
 syntax match lsStatement /\<\%(return\|break\|continue\|throw\)\>/
 highlight default link lsStatement Statement
 
-syntax match coRepeat /\<\%(for\%( own\| ever\)\?\|while\|until\)\>/
+syntax match lsRepeat /\<\%(for\%( own\| ever\)\?\|while\|until\)\>/
 highlight default link lsRepeat Repeat
 
-syntax match lsConditional /\<\%(if\|else\|unless\|switch\|case\|when\|\\|\|default\)\>/
+syntax match lsConditional /\<\%(if\|else\|unless\|switch\|case\|when\|default\)\>/
 highlight default link lsConditional Conditional
 
 syntax match lsException /\<\%(try\|catch\|finally\)\>/
