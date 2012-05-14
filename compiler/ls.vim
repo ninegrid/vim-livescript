@@ -1,29 +1,29 @@
-" Language:    Coco
-" Maintainer:  satyr
-" URL:         http://github.com/satyr/vim-coco
+" Language:    LiveScript
+" Maintainer:  George Zahariev
+" URL:         http://github.com/gkz/vim-ls
 " License:     WTFPL
 
 if exists('current_compiler')
   finish
 endif
 
-let current_compiler = 'co'
-" Pattern to check if coco is the compiler
+let current_compiler = 'ls'
+" Pattern to check if livescript is the compiler
 let s:pat = '^' . current_compiler
 
-" Path to Coco compiler
-if !exists('coco_compiler')
-  let coco_compiler = 'coco'
+" Path to LiveScript compiler
+if !exists('livescript_compiler')
+  let livescript_compiler = 'livescript'
 endif
 
-if !exists('coco_make_options')
-  let coco_make_options = ''
+if !exists('livescript_make_options')
+  let livescript_make_options = ''
 endif
 
 " Get a `makeprg` for the current filename. This is needed to support filenames
 " with spaces and quotes, but also not break generic `make`.
 function! s:GetMakePrg()
-  return g:coco_compiler . ' -c ' . g:coco_make_options . ' $* '
+  return g:livescript_compiler . ' -c ' . g:livescript_make_options . ' $* '
   \                      . fnameescape(expand('%'))
 endfunction
 
@@ -41,7 +41,7 @@ function! s:SetMakePrg()
 endfunction
 
 " Set a dummy compiler so we can check whether to set locally or globally.
-CompilerSet makeprg=coco
+CompilerSet makeprg=livescript
 call s:SetMakePrg()
 
 CompilerSet errorformat=%EFailed\ at:\ %f,
@@ -50,17 +50,17 @@ CompilerSet errorformat=%EFailed\ at:\ %f,
                        \%C,%C\ %.%#
 
 " Compile the current file.
-command! -bang -bar -nargs=* CocoMake make<bang> <args>
+command! -bang -bar -nargs=* LiveScriptMake make<bang> <args>
 
 " Set `makeprg` on rename since we embed the filename in the setting.
-augroup CocoUpdateMakePrg
+augroup LiveScriptUpdateMakePrg
   autocmd!
 
-  " Update `makeprg` if coco is still the compiler, else stop running this
+  " Update `makeprg` if livescript is still the compiler, else stop running this
   " function.
   function! s:UpdateMakePrg()
     if !s:SetMakePrg()
-      autocmd! CocoUpdateMakePrg
+      autocmd! LiveScriptUpdateMakePrg
     endif
   endfunction
 

@@ -1,8 +1,8 @@
-" Language:    Coco
-" Maintainer:  satyr
-" URL:         http://github.com/satyr/vim-coco
+" Language:    LiveScript
+" Maintainer:  George Zahariev
+" URL:         http://github.com/gkz/vim-ls
 " License:     WTFPL
-
-autocmd BufNewFile,BufRead *.co set filetype=co
-autocmd BufNewFile,BufRead *Cokefile set filetype=co
+"
+autocmd BufNewFile,BufRead *.ls set filetype=ls
+autocmd BufNewFile,BufRead *Slakefile set filetype=ls
 

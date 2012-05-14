@@ -1,136 +1,136 @@
-" Language:    Coco
-" Maintainer:  satyr
-" URL:         http://github.com/satyr/vim-coco
+" Language:    LiveScript
+" Maintainer:  George Zahariev
+" URL:         http://github.com/gkz/vim-ls
 " License:     WTFPL
 
-if exists('b:current_syntax') && b:current_syntax == 'coco'
+if exists('b:current_syntax') && b:current_syntax == 'livescript'
   finish
 endif
 
-let b:current_syntax = "co"
+let b:current_syntax = "ls"
 
 " Highlight long strings.
 syntax sync minlines=100
 
 setlocal iskeyword=48-57,A-Z,$,a-z,_
 
-syntax match coIdentifier /[$A-Za-z_]\k*/
-highlight default link coIdentifier Identifier
+syntax match lsIdentifier /[$A-Za-z_]\k*/
+highlight default link lsIdentifier Identifier
 
 " These are 'matches' rather than 'keywords' because vim's highlighting priority
 " for keywords (the highest) causes them to be wrongly highlighted when used as
 " dot-properties.
-syntax match coStatement /\<\%(return\|break\|continue\|throw\)\>/
-highlight default link coStatement Statement
+syntax match lsStatement /\<\%(return\|break\|continue\|throw\)\>/
+highlight default link lsStatement Statement
 
 syntax match coRepeat /\<\%(for\%( own\| ever\)\?\|while\|until\)\>/
-highlight default link coRepeat Repeat
+highlight default link lsRepeat Repeat
 
-syntax match coConditional /\<\%(if\|else\|unless\|switch\|case\|default\)\>/
-highlight default link coConditional Conditional
+syntax match lsConditional /\<\%(if\|else\|unless\|switch\|case\|when\|\\|\|default\)\>/
+highlight default link lsConditional Conditional
 
-syntax match coException /\<\%(try\|catch\|finally\)\>/
-highlight default link coException Exception
+syntax match lsException /\<\%(try\|catch\|finally\)\>/
+highlight default link lsException Exception
 
-syntax match coKeyword /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|import\%( all\)\?\|extends\|from\|to\|til\|by\|do\|then\|function\|class\|let\|with\|export\|eval\|super\|fallthrough\|debugger\)\>/
-highlight default link coKeyword Keyword
+syntax match lsKeyword /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|isnt\|import\%( all\)\?\|extends\|from\|to\|til\|by\|do\|then\|function\|class\|let\|with\|export\|eval\|super\|fallthrough\|debugger\)\>/
+highlight default link lsKeyword Keyword
 
-syntax match coBoolean /\<\%(true\|false\|null\|void\)\>/
-highlight default link coBoolean Boolean
+syntax match lsBoolean /\<\%(true\|false\|yes\|no\|on\|off\|null\|void\)\>/
+highlight default link lsBoolean Boolean
 
 " Matches context variables.
-syntax match coContext /\<\%(this\|arguments\|it\|that\|constructor\|prototype\|superclass\)\>/
-highlight default link coContext Type
+syntax match lsContext /\<\%(this\|arguments\|it\|that\|constructor\|prototype\|superclass\)\>/
+highlight default link lsContext Type
 
 " Keywords reserved by the language
-syntax cluster coReserved contains=coStatement,coRepeat,coConditional,
-\                                  coException,coOperator,coKeyword,coBoolean
+syntax cluster lsReserved contains=lsStatement,lsRepeat,lsConditional,
+\                                  lsException,lsOperator,lsKeyword,lsBoolean
 
 " Matches ECMAScript 5 built-in globals.
-syntax match coGlobal /\<\%(Array\|Boolean\|Date\|Function\|JSON\|Math\|Number\|Object\|RegExp\|String\|\%(Syntax\|Type\|URI\)\?Error\|is\%(NaN\|Finite\)\|parse\%(Int\|Float\)\|\%(en\|de\)codeURI\%(Component\)\?\)\>/
-highlight default link coGlobal Structure
+syntax match lsGlobal /\<\%(Array\|Boolean\|Date\|Function\|JSON\|Math\|Number\|Object\|RegExp\|String\|\%(Syntax\|Type\|URI\)\?Error\|is\%(NaN\|Finite\)\|parse\%(Int\|Float\)\|\%(en\|de\)codeURI\%(Component\)\?\)\>/
+highlight default link lsGlobal Structure
 
-syntax region coString start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@coInterpString
-syntax region coString start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=@coSimpleString
-highlight default link coString String
+syntax region lsString start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=@lsInterpString
+syntax region lsString start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=@lsSimpleString
+highlight default link lsString String
 
 " Matches decimal/floating-point numbers like 10.42e-8.
-syntax match coFloat
+syntax match lsFloat
 \ /\<\d[0-9_]*\%(\.\d[0-9_]*\)\?\%(e[+-]\?\d[0-9_]*\)\?\k*/
-\ contains=coNumberComment
-highlight default link coFloat Float
-syntax match coNumberComment /\d\+\zs\%(e[+-]\?\d\)\@!\k*\>/ contained
-highlight default link coNumberComment Comment
+\ contains=lsNumberComment
+highlight default link lsFloat Float
+syntax match lsNumberComment /\d\+\zs\%(e[+-]\?\d\)\@!\k*\>/ contained
+highlight default link lsNumberComment Comment
 " Matches hex numbers like 0xfff, 0x000.
-syntax match coNumber /\<0x\x\+/
+syntax match lsNumber /\<0x\x\+/
 " Matches N radix numbers like 2r1010.
-syntax match coNumber
+syntax match lsNumber
 \ /\<\%([2-9]\|[12]\d\|3[0-6]\)r[0-9A-Za-z][0-9A-Za-z_]*/
-highlight default link coNumber Number
+highlight default link lsNumber Number
 
 " Displays an error for reserved words.
-syntax match coReservedError /\<\%(var\|const\|enum\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
-highlight default link coReservedError Error
+syntax match lsReservedError /\<\%(var\|const\|enum\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
+highlight default link lsReservedError Error
 
-syntax keyword coTodo TODO FIXME XXX contained
-highlight default link coTodo Todo
+syntax keyword lsTodo TODO FIXME XXX contained
+highlight default link lsTodo Todo
 
-syntax match  coComment /#.*/                   contains=@Spell,coTodo
-syntax region coComment start=/\/\*/ end=/\*\// contains=@Spell,coTodo
-highlight default link coComment Comment
+syntax match  lsComment /#.*/                   contains=@Spell,lsTodo
+syntax region lsComment start=/\/\*/ end=/\*\// contains=@Spell,lsTodo
+highlight default link lsComment Comment
 
-syntax region coEmbed start=/`/ skip=/\\\\\|\\`/ end=/`/
-highlight default link coEmbed Special
+syntax region lsEmbed start=/`/ skip=/\\\\\|\\`/ end=/`/
+highlight default link lsEmbed Special
 
-syntax region coInterpolation matchgroup=coInterpDelim
+syntax region lsInterpolation matchgroup=lsInterpDelim
 \                                 start=/\#{/ end=/}/
 \                                 contained contains=TOP
-highlight default link coInterpDelim Delimiter
+highlight default link lsInterpDelim Delimiter
 
 " Matches escape sequences like \000, \x00, \u0000, \n.
-syntax match coEscape /\\\d\d\d\|\\x\x\{2\}\|\\u\x\{4\}\|\\./ contained
-highlight default link coEscape SpecialChar
+syntax match lsEscape /\\\d\d\d\|\\x\x\{2\}\|\\u\x\{4\}\|\\./ contained
+highlight default link lsEscape SpecialChar
 
-syntax match coVarInterpolation /#[$A-Za-z_]\k*/ contained
-highlight default link coVarInterpolation Identifier
+syntax match lsVarInterpolation /#[$A-Za-z_]\k*/ contained
+highlight default link lsVarInterpolation Identifier
 
 " What is in a non-interpolated string
-syntax cluster coSimpleString contains=@Spell,coEscape
+syntax cluster lsSimpleString contains=@Spell,lsEscape
 " What is in an interpolated string
-syntax cluster coInterpString contains=@coSimpleString,
-\                                      coInterpolation,coVarInterpolation
+syntax cluster lsInterpString contains=@lsSimpleString,
+\                                      lsInterpolation,lsVarInterpolation
 
-syntax region coRegex start=/\%(\%()\|\i\@<!\d\)\s*\|\i\)\@<!\/\*\@!/
+syntax region lsRegex start=/\%(\%()\|\i\@<!\d\)\s*\|\i\)\@<!\/\*\@!/
 \                     skip=/\[[^]]\{-}\/[^]]\{-}\]/
 \                     end=/\/[gimy$]\{,4}/
-\                     oneline contains=@coSimpleString
-syntax region coHeregex start=/\/\// end=/\/\/[gimy$?]\{,4}/ contains=@coInterpString,coComment,coSpaceError fold
-highlight default link coHeregex coRegex
-highlight default link coRegex String
+\                     oneline contains=@lsSimpleString
+syntax region lsHeregex start=/\/\// end=/\/\/[gimy$?]\{,4}/ contains=@lsInterpString,lsComment,lsSpaceError fold
+highlight default link lsHeregex lsRegex
+highlight default link lsRegex String
 
-syntax region coHeredoc start=/"""/ end=/"""/ contains=@coInterpString fold
-syntax region coHeredoc start=/'''/ end=/'''/ contains=@coSimpleString fold
-highlight default link coHeredoc String
+syntax region lsHeredoc start=/"""/ end=/"""/ contains=@lsInterpString fold
+syntax region lsHeredoc start=/'''/ end=/'''/ contains=@lsSimpleString fold
+highlight default link lsHeredoc String
 
-syntax match coWord /\\\S[^ \t\r,;)}\]]*/
-highlight default link coWord String
+syntax match lsWord /\\\S[^ \t\r,;)}\]]*/
+highlight default link lsWord String
 
-syntax region coWords start=/<\[/ end=/\]>/ contains=fold
-highlight default link coWords String
+syntax region lsWords start=/<\[/ end=/\]>/ contains=fold
+highlight default link lsWords String
 
 " Reserved words can be used as property names.
-syntax match coProp /[$A-Za-z_]\k*[ \t]*:[:=]\@!/
-highlight default link coProp Label
+syntax match lsProp /[$A-Za-z_]\k*[ \t]*:[:=]\@!/
+highlight default link lsProp Label
 
-syntax match coKey
+syntax match lsKey
 \ /\%(\.\@<!\.\%(=\?\s*\|\.\)\|[]})@?]\|::\)\zs\k\+/
 \ transparent
-\ contains=ALLBUT,coIdentifier,coContext,coGlobal,coReservedError,@coReserved 
+\ contains=ALLBUT,lsIdentifier,lsContext,lsGlobal,lsReservedError,@lsReserved 
 
 " Displays an error for trailing whitespace.
-syntax match coSpaceError /\s\+$/ display
-highlight default link coSpaceError Error
+syntax match lsSpaceError /\s\+$/ display
+highlight default link lsSpaceError Error
 
 if !exists('b:current_syntax')
-  let b:current_syntax = 'coco'
+  let b:current_syntax = 'livescript'
 endif

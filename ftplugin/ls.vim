@@ -1,8 +1,8 @@
-" Language:    Coco
-" Maintainer:  satyr
-" URL:         http://github.com/satyr/vim-coco
+" Language:    LiveScript
+" Maintainer:  George Zahariev
+" URL:         http://github.com/gkz/vim-ls
 " License:     WTFPL
-
+"
 if exists("b:did_ftplugin")
   finish
 endif
@@ -14,51 +14,51 @@ setlocal comments=:#
 setlocal commentstring=#\ %s
 setlocal omnifunc=javascriptcomplete#CompleteJS
 
-" Enable CocoMake if it won't overwrite any settings.
+" Enable LiveScriptMake if it won't overwrite any settings.
 if !len(&l:makeprg)
-  compiler co
+  compiler ls
 endif
 
 " Check here too in case the compiler above isn't loaded.
-if !exists('coco_compiler')
-  let coco_compiler = 'coco'
+if !exists('livescript_compiler')
+  let livescript_compiler = 'livescript'
 endif
 
-" Reset the CocoCompile variables for the current buffer.
-function! s:CocoCompileResetVars()
+" Reset the LiveScriptCompile variables for the current buffer.
+function! s:LiveScriptCompileResetVars()
   " Compiled output buffer
-  let b:coco_compile_buf = -1
-  let b:coco_compile_pos = []
+  let b:livescript_compile_buf = -1
+  let b:livescript_compile_pos = []
 
-  " If CocoCompile is watching a buffer
-  let b:coco_compile_watch = 0
+  " If LiveScriptCompile is watching a buffer
+  let b:livescript_compile_watch = 0
 endfunction
 
 " Clean things up in the source buffer.
-function! s:CocoCompileClose()
-  exec bufwinnr(b:coco_compile_src_buf) 'wincmd w'
-  silent! autocmd! CocoCompileAuWatch * <buffer>
-  call s:CocoCompileResetVars()
+function! s:LiveScriptCompileClose()
+  exec bufwinnr(b:livescript_compile_src_buf) 'wincmd w'
+  silent! autocmd! LiveScriptCompileAuWatch * <buffer>
+  call s:LiveScriptCompileResetVars()
 endfunction
 
-" Update the CocoCompile buffer given some input lines.
-function! s:CocoCompileUpdate(startline, endline)
+" Update the LiveScriptCompile buffer given some input lines.
+function! s:LiveScriptCompileUpdate(startline, endline)
   let input = join(getline(a:startline, a:endline), "\n")
 
-  " Move to the CocoCompile buffer.
-  exec bufwinnr(b:coco_compile_buf) 'wincmd w'
+  " Move to the LiveScriptCompile buffer.
+  exec bufwinnr(b:livescript_compile_buf) 'wincmd w'
 
-  " Coco doesn't like empty input.
+  " LiveScript doesn't like empty input.
   if !len(input)
     return
   endif
 
   " Compile input.
-  let output = system(g:coco_compiler . ' -scb 2>&1', input)
+  let output = system(g:livescript_compiler . ' -scb 2>&1', input)
 
-  " Be sure we're in the CocoCompile buffer before overwriting.
-  if exists('b:coco_compile_buf')
-    echoerr 'CocoCompile buffers are messed up'
+  " Be sure we're in the LiveScriptCompile buffer before overwriting.
+  if exists('b:livescript_compile_buf')
+    echoerr 'LiveScriptCompile buffers are messed up'
     return
   endif
 
@@ -76,28 +76,28 @@ function! s:CocoCompileUpdate(startline, endline)
     setlocal filetype=javascript
   endif
 
-  call setpos('.', b:coco_compile_pos)
+  call setpos('.', b:livescript_compile_pos)
 endfunction
 
-" Update the CocoCompile buffer with the whole source buffer.
-function! s:CocoCompileWatchUpdate()
-  call s:CocoCompileUpdate(1, '$')
-  exec bufwinnr(b:coco_compile_src_buf) 'wincmd w'
+" Update the LiveScriptCompile buffer with the whole source buffer.
+function! s:LiveScriptCompileWatchUpdate()
+  call s:LiveScriptCompileUpdate(1, '$')
+  exec bufwinnr(b:livescript_compile_src_buf) 'wincmd w'
 endfunction
 
-" Peek at compiled CocoScript in a scratch buffer. We handle ranges like this
+" Peek at compiled LiveScript in a scratch buffer. We handle ranges like this
 " to prevent the cursor from being moved (and its position saved) before the
 " function is called.
-function! s:CocoCompile(startline, endline, args)
-  if !executable(g:coco_compiler)
-    echoerr "Can't find CocoScript compiler `" . g:coco_compiler . "`"
+function! s:LiveScriptCompile(startline, endline, args)
+  if !executable(g:livescript_compiler)
+    echoerr "Can't find LiveScript compiler `" . g:livescript_compiler . "`"
     return
   endif
 
-  " If in the CocoCompile buffer, switch back to the source buffer and
+  " If in the LiveScriptCompile buffer, switch back to the source buffer and
   " continue.
-  if !exists('b:coco_compile_buf')
-    exec bufwinnr(b:coco_compile_src_buf) 'wincmd w'
+  if !exists('b:livescript_compile_buf')
+    exec bufwinnr(b:livescript_compile_src_buf) 'wincmd w'
   endif
 
   " Parse arguments.
@@ -106,27 +106,27 @@ function! s:CocoCompile(startline, endline, args)
   let size = str2nr(matchstr(a:args, '\<\d\+\>'))
 
   " Determine default split direction.
-  if exists('g:coco_compile_vert')
+  if exists('g:livescript_compile_vert')
     let vert = 1
   else
     let vert = a:args =~ '\<vert\%[ical]\>'
   endif
 
   " Remove any watch listeners.
-  silent! autocmd! CocoCompileAuWatch * <buffer>
+  silent! autocmd! LiveScriptCompileAuWatch * <buffer>
 
   " If just unwatching, don't compile.
   if unwatch
-    let b:coco_compile_watch = 0
+    let b:livescript_compile_watch = 0
     return
   endif
 
   if watch
-    let b:coco_compile_watch = 1
+    let b:livescript_compile_watch = 1
   endif
 
-  " Build the CocoCompile buffer if it doesn't exist.
-  if bufwinnr(b:coco_compile_buf) == -1
+  " Build the LiveScriptCompile buffer if it doesn't exist.
+  if bufwinnr(b:livescript_compile_buf) == -1
     let src_buf = bufnr('%')
     let src_win = bufwinnr(src_buf)
 
@@ -149,33 +149,33 @@ function! s:CocoCompile(startline, endline, args)
     setlocal bufhidden=wipe buftype=nofile
     setlocal nobuflisted nomodifiable noswapfile nowrap
 
-    autocmd BufWipeout <buffer> call s:CocoCompileClose()
-    " Save the cursor when leaving the CocoCompile buffer.
-    autocmd BufLeave <buffer> let b:coco_compile_pos = getpos('.')
+    autocmd BufWipeout <buffer> call s:LiveScriptCompileClose()
+    " Save the cursor when leaving the LiveScriptCompile buffer.
+    autocmd BufLeave <buffer> let b:livescript_compile_pos = getpos('.')
 
     nnoremap <buffer> <silent> q :hide<CR>
 
-    let b:coco_compile_src_buf = src_buf
+    let b:livescript_compile_src_buf = src_buf
     let buf = bufnr('%')
 
     " Go back to the source buffer and set it up.
-    exec bufwinnr(b:coco_compile_src_buf) 'wincmd w'
-    let b:coco_compile_buf = buf
+    exec bufwinnr(b:livescript_compile_src_buf) 'wincmd w'
+    let b:livescript_compile_buf = buf
   endif
 
-  if b:coco_compile_watch
-    call s:CocoCompileWatchUpdate()
+  if b:livescript_compile_watch
+    call s:LiveScriptCompileWatchUpdate()
 
-    augroup CocoCompileAuWatch
-      autocmd InsertLeave <buffer> call s:CocoCompileWatchUpdate()
+    augroup LiveScriptCompileAuWatch
+      autocmd InsertLeave <buffer> call s:LiveScriptCompileWatchUpdate()
     augroup END
   else
-    call s:CocoCompileUpdate(a:startline, a:endline)
+    call s:LiveScriptCompileUpdate(a:startline, a:endline)
   endif
 endfunction
 
-" Complete arguments for the CocoCompile command.
-function! s:CocoCompileComplete(arg, cmdline, cursor)
+" Complete arguments for the LiveScriptCompile command.
+function! s:LiveScriptCompileComplete(arg, cmdline, cursor)
   let args = ['unwatch', 'vertical', 'watch']
 
   if !len(a:arg)
@@ -192,12 +192,12 @@ function! s:CocoCompileComplete(arg, cmdline, cursor)
 endfunction
 
 " Don't overwrite the CoffeeCompile variables.
-if !exists("s:coco_compile_buf")
-  call s:CocoCompileResetVars()
+if !exists("s:livescript_compile_buf")
+  call s:LiveScriptCompileResetVars()
 endif
 
-" Peek at compiled Coco.
-command! -range=% -bar -nargs=* -complete=customlist,s:CocoCompileComplete
-\        CocoCompile call s:CocoCompile(<line1>, <line2>, <q-args>)
-" Run some Coco.
-command! -range=% -bar CocoRun <line1>,<line2>:w !coco -sp
+" Peek at compiled LiveScript.
+command! -range=% -bar -nargs=* -complete=customlist,s:LiveScriptCompileComplete
+\        LiveScriptCompile call s:LiveScriptCompile(<line1>, <line2>, <q-args>)
+" Run some LiveScript.
+command! -range=% -bar LiveScriptRun <line1>,<line2>:w !livescript -sp

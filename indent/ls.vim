@@ -1,6 +1,6 @@
-" Language:    Coco
-" Maintainer:  satyr
-" URL:         http://github.com/satyr/vim-coco
+" Language:    LiveScript
+" Maintainer:  George Zahariev
+" URL:         http://github.com/gkz/vim-ls
 " License:     WTFPL
 
 if exists("b:did_indent")
@@ -10,26 +10,26 @@ endif
 let b:did_indent = 1
 
 setlocal autoindent
-setlocal indentexpr=GetCocoIndent(v:lnum)
-" Make sure GetCocoIndent is run when these are typed so they can be
+setlocal indentexpr=GetLiveScriptIndent(v:lnum)
+" Make sure GetLiveScriptIndent is run when these are typed so they can be
 " indented or outdented.
 setlocal indentkeys+=0],0),0.,=else,=when,=catch,=finally
 
 " Only define the function once.
-if exists("*GetCocoIndent")
+if exists("*GetLiveScriptIndent")
   finish
 endif
 
 " Keywords to indent after
 let s:INDENT_AFTER_KEYWORD = '^\%(if\|unless\|else\|for\|while\|until\|'
-\                          . 'case\|default\|try\|catch\|finally\|'
+\                          . 'loop\|case\|default\|try\|catch\|finally\|'
 \                          . 'class\|do\|new\|let\|with\)\>'
 
 " Operators to indent after
 let s:INDENT_AFTER_OPERATOR = '\%([([{:=]\|[-=]>\)$'
 
 " Keywords and operators that continue a line
-let s:CONTINUATION = '\<\%(is\|and\|or\)\>$'
+let s:CONTINUATION = '\<\%(is\|isnt\|and\|or\)\>$'
 \                  . '\|'
 \                  . '\%(-\@<!-\|+\@<!+\|<\|[-~]\@<!>\|\*\|/\@<!/\|%\||\|'
 \                  . '&\|,\|\.\@<!\.\)$'
@@ -162,7 +162,7 @@ function! s:GetMatch(curline)
   elseif firstchar == ']'
     return s:SearchPair('\[', '\]')
   elseif a:curline =~ '^else\>'
-    return s:SearchPair('\<\%(if\|unless\|case\)\>', '\<else\>')
+    return s:SearchPair('\<\%(if\|unless\|case\|when\)\>', '\<else\>')
   elseif a:curline =~ '^catch\>'
     return s:SearchPair('\<try\>', '\<catch\>')
   elseif a:curline =~ '^finally\>'
@@ -193,7 +193,7 @@ function! s:GetTrimmedLine(linenum)
   \                                                '\s\+$', '', '')
 endfunction
 
-function! s:GetCocoIndent(curlinenum)
+function! s:GetLiveScriptIndent(curlinenum)
   let prevlinenum = s:GetPrevNormalLine(a:curlinenum)
 
   " Don't do anything if there's no previous line.
@@ -254,10 +254,10 @@ function! s:GetCocoIndent(curlinenum)
   return -1
 endfunction
 
-" Wrap s:GetCocoIndent to keep the cursor position.
-function! GetCocoIndent(curlinenum)
+" Wrap s:GetLiveScriptIndent to keep the cursor position.
+function! GetLiveScriptIndent(curlinenum)
   let oldcursor = getpos('.')
-  let indent = s:GetCocoIndent(a:curlinenum)
+  let indent = s:GetLiveScriptIndent(a:curlinenum)
   call setpos('.', oldcursor)
 
   return indent
