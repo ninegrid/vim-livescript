@@ -63,9 +63,9 @@ syntax match lsNumberComment /\d\+\zs\%(e[+-]\?\d\)\@!\k*\>/ contained
 highlight default link lsNumberComment Comment
 " Matches hex numbers like 0xfff, 0x000.
 syntax match lsNumber /\<0x\x\+/
-" Matches N radix numbers like 2r1010.
-syntax match lsNumber
-\ /\<\%([2-9]\|[12]\d\|3[0-6]\)r[0-9A-Za-z][0-9A-Za-z_]*/
+" Matches N radix numbers like 2@1010.
+syntax match lsNumber 
+\ /\<\%(\d*\)@[0-9A-Za-z][0-9A-Za-z_]*/
 highlight default link lsNumber Number
 
 " Displays an error for reserved words.
