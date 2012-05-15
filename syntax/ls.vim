@@ -65,7 +65,7 @@ highlight default link lsNumberComment Comment
 syntax match lsNumber /\<0x\x\+/
 " Matches N radix numbers like 2@1010.
 syntax match lsNumber 
-\ /\<\%(\d*\)@[0-9A-Za-z][0-9A-Za-z_]*/
+\ /\<\%(\d*\)\~[0-9A-Za-z][0-9A-Za-z_]*/
 highlight default link lsNumber Number
 
 " Displays an error for reserved words.
