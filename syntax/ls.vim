@@ -14,7 +14,7 @@ syntax sync minlines=100
 
 setlocal iskeyword=48-57,A-Z,$,a-z,_
 
-syntax match lsIdentifier /[$A-Za-z_]\k*/
+syntax match lsIdentifier /[$A-Za-z_]\k*\(-[a-zA-Z]\+\)*/
 highlight default link lsIdentifier Identifier
 
 " These are 'matches' rather than 'keywords' because vim's highlighting priority
@@ -32,7 +32,7 @@ highlight default link lsConditional Conditional
 syntax match lsException /\<\%(try\|catch\|finally\)\>/
 highlight default link lsException Exception
 
-syntax match lsKeyword /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|isnt\|import\%( all\)\?\|extends\|from\|to\|til\|by\|do\|then\|function\|class\|let\|with\|export\|eval\|super\|fallthrough\|debugger\)\>/
+syntax match lsKeyword /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|isnt\|import\%( all\)\?\|extends\|from\|to\|til\|by\|do\|then\|function\|class\|let\|with\|export\|eval\|super\|fallthrough\|debugger\)\>/ 
 highlight default link lsKeyword Keyword
 
 syntax match lsBoolean /\<\%(true\|false\|yes\|no\|on\|off\|null\|void\)\>/
