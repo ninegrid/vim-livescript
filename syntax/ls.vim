@@ -1,5 +1,4 @@
-" Language:    LiveScript
-" Maintainer:  George Zahariev
+" Language:    LiveScript " Maintainer:  George Zahariev
 " URL:         http://github.com/gkz/vim-ls
 " License:     WTFPL
 
@@ -79,8 +78,8 @@ syntax match  lsComment /#.*/                   contains=@Spell,lsTodo
 syntax region lsComment start=/\/\*/ end=/\*\// contains=@Spell,lsTodo
 highlight default link lsComment Comment
 
-syntax region lsEmbed start=/`/ skip=/\\\\\|\\`/ end=/`/
-highlight default link lsEmbed Special
+syntax region lsInfixFunc start=/`/ end=/`/
+highlight default link lsInfixFunc Identifier
 
 syntax region lsInterpolation matchgroup=lsInterpDelim
 \                                 start=/\#{/ end=/}/
