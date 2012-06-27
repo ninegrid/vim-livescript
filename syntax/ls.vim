@@ -90,7 +90,7 @@ highlight default link lsInterpDelim Delimiter
 syntax match lsEscape /\\\d\d\d\|\\x\x\{2\}\|\\u\x\{4\}\|\\./ contained
 highlight default link lsEscape SpecialChar
 
-syntax match lsVarInterpolation /#[$A-Za-z_]\k*/ contained
+syntax match lsVarInterpolation /#[$A-Za-z_]\k*\(-[a-zA-Z]\+\)*/ contained
 highlight default link lsVarInterpolation Identifier
 
 " What is in a non-interpolated string
