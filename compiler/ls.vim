@@ -45,6 +45,7 @@ CompilerSet makeprg=livescript
 call s:SetMakePrg()
 
 CompilerSet errorformat=%EFailed\ at:\ %f,
+                       \%ECan't\ find:\ %f,
                        \%CSyntaxError:\ %m\ on\ line\ %l,
                        \%CError:\ Parse\ error\ on\ line\ %l:\ %m,
                        \%C,%C\ %.%#

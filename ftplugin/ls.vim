@@ -139,7 +139,7 @@ function! s:LiveScriptCompile(startline, endline, args)
     else
       " Try to guess the compiled output's height.
       let height = size ? size : min([winheight(src_win) / 2,
-      \                               a:endline - a:startline + 2])
+      \                               a:endline - a:startline + 5])
 
       belowright new
       exec 'resize' height
