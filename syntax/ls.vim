@@ -1,4 +1,5 @@
-" Language:    LiveScript " Maintainer:  George Zahariev
+" Language:    LiveScript " 
+" Maintainer:  George Zahariev
 " URL:         http://github.com/gkz/vim-ls
 " License:     WTFPL
 
@@ -31,7 +32,7 @@ highlight default link lsConditional Conditional
 syntax match lsException /\<\%(try\|catch\|finally\)\>/
 highlight default link lsException Exception
 
-syntax match lsKeyword /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|isnt\|import\%( all\)\?\|extends\|from\|to\|til\|by\|do\|then\|function\|class\|let\|with\|export\|const\|var\|eval\|super\|fallthrough\|debugger\)\>/ 
+syntax match lsKeyword /\<\%(new\|in\%(stanceof\)\?\|typeof\|delete\|and\|o[fr]\|not\|is\|isnt\|imp\%(ort\%( all\)\?\|lements\)\|extends\|from\|to\|til\|by\|do\|then\|function\|class\|let\|with\|export\|const\|var\|eval\|super\|fallthrough\|debugger\)\>/ 
 highlight default link lsKeyword Keyword
 
 syntax match lsBoolean /\<\%(true\|false\|yes\|no\|on\|off\|null\|void\)\>/
@@ -68,7 +69,7 @@ syntax match lsNumber
 highlight default link lsNumber Number
 
 " Displays an error for reserved words.
-syntax match lsReservedError /\<\%(enum\|implements\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
+syntax match lsReservedError /\<\%(enum\|interface\|package\|private\|protected\|public\|static\|yield\)\>/
 highlight default link lsReservedError Error
 
 syntax keyword lsTodo TODO FIXME XXX contained
