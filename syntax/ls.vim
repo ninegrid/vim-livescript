@@ -57,7 +57,7 @@ highlight default link lsString String
 " Matches decimal/floating-point numbers like 10.42e-8.
 syntax match lsFloat
 \ /\<\d[0-9_]*\%(\.\d[0-9_]*\)\?\%(e[+-]\?\d[0-9_]*\)\?\k*/
-\ contains=lsNumberComment
+"\ contains=lsNumberComment
 highlight default link lsFloat Float
 syntax match lsNumberComment /\d\+\zs\%(e[+-]\?\d\)\@!\k*\>/ contained
 highlight default link lsNumberComment Comment
