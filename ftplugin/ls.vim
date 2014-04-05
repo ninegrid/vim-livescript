@@ -168,6 +168,7 @@ function! s:LiveScriptCompile(startline, endline, args)
 
     augroup LiveScriptCompileAuWatch
       autocmd InsertLeave <buffer> call s:LiveScriptCompileWatchUpdate()
+      autocmd BufWritePost <buffer> call s:LiveScriptCompileWatchUpdate()
     augroup END
   else
     call s:LiveScriptCompileUpdate(a:startline, a:endline)
