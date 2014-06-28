@@ -6,7 +6,7 @@ For more information about LiveScript see [gkz.github.com/LiveScript](http://gkz
 1. Install [tpope's][tpope] [pathogen] into `~/.vim/autoload/` and add the
    following line to your `~/.vimrc`:
 
-        call pathogen#runtime_append_all_bundles()
+        call pathogen#infect()
 
      Be aware that it must be added before any `filetype plugin indent on`
      lines according to the install page:
